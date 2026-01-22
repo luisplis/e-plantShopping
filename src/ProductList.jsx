@@ -259,7 +259,8 @@ function ProductList({ onHomeClick }) {
     };
     
     const handleAddToCart = (plant) => {
-        alert('Plant "'+plant.name+'" added to cart');
+        // ### sería mejor con useSelector y variable de componente addedToCart
+        console.log('Plant "'+plant.name+'" added to cart');
         setAddedToCart([...addedToCart, plant.name]);
         dispatch(addItem(plant));
     };
