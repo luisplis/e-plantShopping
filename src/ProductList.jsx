@@ -8,7 +8,7 @@ function ProductList({ onHomeClick }) {
     const dispatch = useDispatch();
     const [showCart, setShowCart] = useState(false);
     const [showPlants, setShowPlants] = useState(false); // State to control the visibility of the About Us page
-    const [addedToCart, setAddedToCart] = useState([]);
+    //#-# const [addedToCart, setAddedToCart] = useState([]);
 
     const plantsArray = [
         {
@@ -258,11 +258,14 @@ function ProductList({ onHomeClick }) {
         setShowCart(false);
     };
     
+    // #+# Mejor useSelector en 'items' que useState en 'addedToCart' si tengo Redux
+    let items = useSelector(state => state.cart.items).map(item => item.name);
+
     const handleAddToCart = (plant) => {
-        // ### sería mejor con useSelector y variable de componente addedToCart
         console.log('Plant "'+plant.name+'" added to cart');
-        setAddedToCart([...addedToCart, plant.name]);
         dispatch(addItem(plant));
+        //#-# setAddedToCart([...addedToCart, plant.name]);
+        items = [...items, plant.name];
     };
 
     return (
@@ -285,6 +288,10 @@ function ProductList({ onHomeClick }) {
                     <div> <a href="#" onClick={(e) => handleCartClick(e)} style={styleA}><h1 className='cart'><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" id="IconChangeColor" height="68" width="68"><rect width="156" height="156" fill="none"></rect><circle cx="80" cy="216" r="12"></circle><circle cx="184" cy="216" r="12"></circle><path d="M42.3,72H221.7l-26.4,92.4A15.9,15.9,0,0,1,179.9,176H84.1a15.9,15.9,0,0,1-15.4-11.6L32.5,37.8A8,8,0,0,0,24.8,32H8" fill="none" stroke="#faf9f9" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" id="mainIconPathAttribute"></path></svg></h1></a></div>
                 </div>
             </div>
+            
+  <pre>
+    {JSON.stringify(items, null, 2)}
+  </pre>
             {!showCart ? (
                 <div className="product-grid">
 {
@@ -302,9 +309,12 @@ plantsArray.map((category, index) => ( // Loop through each category in plantsAr
             <div className="product-price">{plant.cost} <small>€</small></div>
             <button className="product-button" 
                     onClick={() => handleAddToCart(plant)}
-                    disabled={addedToCart.includes(plant.name)? 'disabled': ''}>
+                    disabled={/* #-# addedToCart.includes(plant.name)? 'disabled': '' */
+                           /* #+# */ items.includes(plant.name) ? 'disabled': '' // #+#
+                        }>
                     {
-                        addedToCart.includes(plant.name) ? 'Added to Cart' : 'Add to Cart'
+                        // #-# addedToCart.includes(plant.name) ? 'Added to Cart' : 'Add to Cart'   
+                        items.includes(plant.name) ? 'Added to Cart' : 'Add to Cart' // #+# 
                     }
             </button>
         </div>
